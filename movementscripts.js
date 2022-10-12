@@ -1,34 +1,134 @@
-import readlineSync from "readline-sync";
-let CourseSegments = [1, -1, 1, -1];
+//https://stackoverflow.com/questions/5006821/nodejs-how-to-read-keystrokes-from-stdin
+//https://stackoverflow.com/questions/67323405/javascript-readline-when-the-user-inputs-a-letter-i-want-to-exit-right-away-wit
 
-// right is +1, left is -1
+import readline from "node:readline";
+import stream from 'node:stream'
+import {Writable} from 'node:stream';
+// var Writable = 'stream'.Writable;
 
-function testing(course) {
-  for (let i = 0; i < course.length; i++) {
-    // setTimeout(() => {
-    let userInput = readlineSync.keyIn(
-      course[i] > 0 ? "Turning Right!!" : "Turning Left!!",
-      { hideEchoBack:true }
-    );
-    
-        if (!userInput) return "you lose!"
-    
-    
-    switch (userInput) {
-      case "a":
-        console.log("LEFT");
-        userInput = -1;
-        break;
-      case "d":
-        console.log("RIGHT");
-        userInput = 1;
-        break;
-    }
-    if (course[i] + userInput != 0) {
-      return "you lose!";
-    }
+const ac = new AbortController();
+const signal = ac.signal;
+
+let mutableStdout = new Writable({
+  write: function(chunk, encoding, callback) {
+    if (!this.muted)
+      process.stdout.write(chunk, encoding);
+    callback();
   }
-  return "you win!";
+});
+
+mutableStdout.muted = true;
+readline.createInterface({
+  input: process.stdin,
+  output: mutableStdout,
+  terminal: true
+});
+
+let courseSegments = [1, -1, 1, -1, 1, -1, 1, -1];
+let timeoutId;
+
+function resetTimer(course) {
+  clearTimeout(timeoutId);
+  
+  if (course[0] > 0) {
+    console.log("Turning Right!!");
+  } else {
+    console.log("Turning Left!!");
+  }
+  timeoutId = setTimeout(() => {
+    console.log("you lose");
+    process.exit();
+  }, 2000);
 }
 
-console.log(testing(CourseSegments));
+let userInput;
+let value;
+
+process.stdin.on("keypress", function (ch, key) {
+  if (key && key.ctrl && key.name == "c") {
+    process.stdin.pause();
+  }
+  value = key.sequence;
+  giveResponse(value);
+
+  // resetTimer();
+});
+
+function giveResponse(thekey) {
+  switch (value) {
+    case "a":
+      console.log("LEFT");
+      userInput = -1;
+      break;
+    case "d":
+      console.log("RIGHT");
+      userInput = 1;
+      break;
+    default:
+      return;
+  }
+  if (courseSegments[0] + userInput != 0) {
+    // console.log(courseSegments[0]);
+    console.log("you lose!");
+    process.exit();
+  }
+  // console.log(courseSegments.length);
+  if (courseSegments.length == 1) {
+    console.log("you win!");
+    process.exit();
+  } else {
+    courseSegments.shift();
+
+    resetTimer(courseSegments);
+  }
+  // process.exit()
+}
+
+resetTimer(courseSegments);
+
+// function asktheQuestion(input) {
+//   let userInput = 0;
+//   rl.question(
+//     input > 0 ? "Turning Right!!" : "Turning Left!!",
+//     { signal },
+//     (answer) => {
+//       // rl.question("Turning Right!!", { signal }, (answer) => {
+//       switch (answer) {
+//         case "a":
+//           console.log("LEFT");
+//           userInput = -1;
+//           break;
+//         case "d":
+//           console.log("RIGHT");
+//           userInput = 1;
+//           break;
+//       }
+//       process.exit();
+//     }
+//   );
+
+//   signal.addEventListener(
+//     "abort",
+//     () => {
+//       console.log("You lost!");
+//     },
+//     { once: true }
+//   );
+
+//   setTimeout(() => {
+//     ac.abort();
+//     process.exit();
+//   }, 5000); // 5 seconds
+// }
+
+// asktheQuestion(1)
+
+// rl.question('What is your favorite food? ', { signal }, (answer) => {
+//   console.log(`Oh, so your favorite food is ${answer}`);
+// });
+
+// signal.addEventListener('abort', () => {
+//   console.log('The food question timed out');
+// }, { once: true });
+
+// setTimeout(() => ac.abort(), 10000);
