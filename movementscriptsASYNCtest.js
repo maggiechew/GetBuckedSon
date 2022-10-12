@@ -2,59 +2,59 @@
 //https://stackoverflow.com/questions/67323405/javascript-readline-when-the-user-inputs-a-letter-i-want-to-exit-right-away-wit
 
 import readline from "node:readline";
-// import keypress from "keypress";
+import stream from 'node:stream'
+import {Writable} from 'node:stream';
+// var Writable = 'stream'.Writable;
+
 const ac = new AbortController();
 const signal = ac.signal;
+
+let mutableStdout = new Writable({
+  write: function(chunk, encoding, callback) {
+    if (!this.muted)
+      process.stdout.write(chunk, encoding);
+    callback();
+  }
+});
+
+mutableStdout.muted = true;
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
-  // terminal: false,
+  terminal: true
 });
 
-// process.stdin.setRawMode(true);
-// process.stdin.resume();
-
 let courseSegments = [1, -1, 1, -1, 1, -1, 1, -1];
-// rl.stdoutMuted = true;
-// keypress(process.stdin);
 let timeoutId;
 
 function resetTimer(course) {
+  clearTimeout(timeoutId);
+  
   if (course[0] > 0) {
     console.log("Turning Right!!");
   } else {
     console.log("Turning Left!!");
   }
-
-  // timeoutId = setTimeout(() => {
-  //   console.log("you lose");
-  //   process.exit();
-  // }, 2000);
+  timeoutId = setTimeout(() => {
+    console.log("you lose");
+    process.exit();
+  }, 2000);
 }
 
 let userInput;
 let value;
 
 process.stdin.on("keypress", function (ch, key) {
-  // console.log("yo");
   if (key && key.ctrl && key.name == "c") {
     process.stdin.pause();
   }
   value = key.sequence;
-  // console.log(value)
-
   giveResponse(value);
-  // process.stdin.pause();
-
-  // console.log(value)
-  // clearTimeout(timeoutId);
 
   // resetTimer();
 });
 
 function giveResponse(thekey) {
-  // console.log("Hi");
-
   switch (value) {
     case "a":
       console.log("\nLEFT");
@@ -67,8 +67,6 @@ function giveResponse(thekey) {
     default:
       return;
   }
-  // console.log(courseSegments);
-  // console.log(value)
   if (courseSegments[0] + userInput != 0) {
     console.log(courseSegments[0]);
     console.log("you lose!");
@@ -88,40 +86,40 @@ function giveResponse(thekey) {
 
 resetTimer(courseSegments);
 
-function asktheQuestion(input) {
-  let userInput = 0;
-  rl.question(
-    input > 0 ? "Turning Right!!" : "Turning Left!!",
-    { signal },
-    (answer) => {
-      // rl.question("Turning Right!!", { signal }, (answer) => {
-      switch (answer) {
-        case "a":
-          console.log("LEFT");
-          userInput = -1;
-          break;
-        case "d":
-          console.log("RIGHT");
-          userInput = 1;
-          break;
-      }
-      process.exit();
-    }
-  );
+// function asktheQuestion(input) {
+//   let userInput = 0;
+//   rl.question(
+//     input > 0 ? "Turning Right!!" : "Turning Left!!",
+//     { signal },
+//     (answer) => {
+//       // rl.question("Turning Right!!", { signal }, (answer) => {
+//       switch (answer) {
+//         case "a":
+//           console.log("LEFT");
+//           userInput = -1;
+//           break;
+//         case "d":
+//           console.log("RIGHT");
+//           userInput = 1;
+//           break;
+//       }
+//       process.exit();
+//     }
+//   );
 
-  signal.addEventListener(
-    "abort",
-    () => {
-      console.log("You lost!");
-    },
-    { once: true }
-  );
+//   signal.addEventListener(
+//     "abort",
+//     () => {
+//       console.log("You lost!");
+//     },
+//     { once: true }
+//   );
 
-  setTimeout(() => {
-    ac.abort();
-    process.exit();
-  }, 5000); // 5 seconds
-}
+//   setTimeout(() => {
+//     ac.abort();
+//     process.exit();
+//   }, 5000); // 5 seconds
+// }
 
 // asktheQuestion(1)
 
