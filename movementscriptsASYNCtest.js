@@ -14,7 +14,7 @@ const rl = readline.createInterface({
 // process.stdin.setRawMode(true);
 // process.stdin.resume();
 
-let courseSegments = [1, -1, 1, -1];
+let courseSegments = [1, -1, 1, -1, 1, -1, 1, -1];
 // rl.stdoutMuted = true;
 // keypress(process.stdin);
 let timeoutId;
@@ -36,7 +36,7 @@ let userInput;
 let value;
 
 process.stdin.on("keypress", function (ch, key) {
-  console.log("yo");
+  // console.log("yo");
   if (key && key.ctrl && key.name == "c") {
     process.stdin.pause();
   }
@@ -53,29 +53,31 @@ process.stdin.on("keypress", function (ch, key) {
 });
 
 function giveResponse(thekey) {
-  console.log("Hi");
+  // console.log("Hi");
 
   switch (value) {
     case "a":
-      console.log("LEFT");
+      console.log("\nLEFT");
       userInput = -1;
       break;
     case "d":
-      console.log("RIGHT");
+      console.log("\nRIGHT");
       userInput = 1;
       break;
     default:
       return;
   }
-console.log(courseSegments)
+  // console.log(courseSegments);
   // console.log(value)
   if (courseSegments[0] + userInput != 0) {
     console.log(courseSegments[0]);
-    return console.log("you lose!");
+    console.log("you lose!");
+    process.exit();
   }
-  console.log(courseSegments.length);
-  if (courseSegments.length == 0) {
-    return console.log("you win!");
+  // console.log(courseSegments.length);
+  if (courseSegments.length == 1) {
+    console.log("you win!");
+    process.exit();
   } else {
     courseSegments.shift();
 
