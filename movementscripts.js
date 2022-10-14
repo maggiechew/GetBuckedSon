@@ -1,10 +1,5 @@
-//https://stackoverflow.com/questions/5006821/nodejs-how-to-read-keystrokes-from-stdin
-//https://stackoverflow.com/questions/67323405/javascript-readline-when-the-user-inputs-a-letter-i-want-to-exit-right-away-wit
-
 import readline from "node:readline";
-import stream from 'node:stream'
 import {Writable} from 'node:stream';
-// var Writable = 'stream'.Writable;
 
 const ac = new AbortController();
 const signal = ac.signal;
@@ -84,51 +79,9 @@ function giveResponse(thekey) {
   // process.exit()
 }
 
+function letsStart(){
 resetTimer(courseSegments);
+}
 
-// function asktheQuestion(input) {
-//   let userInput = 0;
-//   rl.question(
-//     input > 0 ? "Turning Right!!" : "Turning Left!!",
-//     { signal },
-//     (answer) => {
-//       // rl.question("Turning Right!!", { signal }, (answer) => {
-//       switch (answer) {
-//         case "a":
-//           console.log("LEFT");
-//           userInput = -1;
-//           break;
-//         case "d":
-//           console.log("RIGHT");
-//           userInput = 1;
-//           break;
-//       }
-//       process.exit();
-//     }
-//   );
 
-//   signal.addEventListener(
-//     "abort",
-//     () => {
-//       console.log("You lost!");
-//     },
-//     { once: true }
-//   );
-
-//   setTimeout(() => {
-//     ac.abort();
-//     process.exit();
-//   }, 5000); // 5 seconds
-// }
-
-// asktheQuestion(1)
-
-// rl.question('What is your favorite food? ', { signal }, (answer) => {
-//   console.log(`Oh, so your favorite food is ${answer}`);
-// });
-
-// signal.addEventListener('abort', () => {
-//   console.log('The food question timed out');
-// }, { once: true });
-
-// setTimeout(() => ac.abort(), 10000);
+letsStart()
