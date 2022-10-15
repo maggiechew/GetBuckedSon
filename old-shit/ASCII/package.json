@@ -10,10 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "ascii-art-image": "^1.4.0",
     "audic": "^3.0.1",
-    "blessed": "^0.1.81",
-    "sound-play": "^1.1.0"
+    "terminal-kit": "^3.0.0"
   },
   "type": "module"
 }

@@ -1,0 +1,8 @@
+- Randomize turns/length
+- welcome sequence
+- press enter to start
+- basic tutorial
+- winner/ loser sequences
+- basic tutorial
+- sounds on cue
+- animations/ frames
