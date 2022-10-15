@@ -1,5 +1,6 @@
 import readline from "node:readline";
 import {Writable} from 'node:stream';
+import {makeRandom} from './random-events.js'
 
 // const ac = new AbortController();
 // const signal = ac.signal;
@@ -18,9 +19,21 @@ readline.createInterface({
   output: mutableStdout,
   terminal: true
 });
-
-let courseSegments = [1, -1, 1, -1, 1, -1, 1, -1];
+let userScore = 0;
+let courseLength = 10;
+let courseSegments = makeRandom(courseLength)
 let timeoutId;
+
+
+
+// consoleResponse(course)
+
+// resetTimer(thing)
+//  logKeys() 
+
+//   giveResponse
+
+
 
 function consoleResponse(course) {
   if (course[0] > 0) {
@@ -67,14 +80,18 @@ function giveResponse(thekey) {
   if (courseSegments[0] + userInput != 0) {
     // console.log(courseSegments[0]);
     console.log("you lose!");
+    console.log('your score is: '+ userScore)
     process.exit();
   }
   // console.log(courseSegments.length);
   if (courseSegments.length == 1) {
+    userScore++
     console.log("you win!");
+    console.log('your score is: '+ userScore)
     process.exit();
   } else {
     courseSegments.shift();
+    userScore++
 
     resetTimer(courseSegments);
   }
