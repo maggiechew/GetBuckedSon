@@ -1,8 +1,8 @@
 import readline from "node:readline";
 import {Writable} from 'node:stream';
 
-const ac = new AbortController();
-const signal = ac.signal;
+// const ac = new AbortController();
+// const signal = ac.signal;
 
 let mutableStdout = new Writable({
   write: function(chunk, encoding, callback) {
@@ -22,14 +22,18 @@ readline.createInterface({
 let courseSegments = [1, -1, 1, -1, 1, -1, 1, -1];
 let timeoutId;
 
-function resetTimer(course) {
-  clearTimeout(timeoutId);
-  
+function consoleResponse(course) {
   if (course[0] > 0) {
     console.log("Turning Right!!");
   } else {
     console.log("Turning Left!!");
   }
+}
+
+function resetTimer(course) {
+  clearTimeout(timeoutId);
+  consoleResponse(course);
+
   timeoutId = setTimeout(() => {
     console.log("you lose");
     process.exit();
@@ -45,8 +49,6 @@ process.stdin.on("keypress", function (ch, key) {
   }
   value = key.sequence;
   giveResponse(value);
-
-  // resetTimer();
 });
 
 function giveResponse(thekey) {
