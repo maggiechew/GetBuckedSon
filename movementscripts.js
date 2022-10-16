@@ -36,19 +36,18 @@ let timeoutId;
 
 
 function consoleResponse(course) {
-  if (course[0] > 0) {
+    if (course[0] == 1) {
     console.log("Turning Right!!");
   } else {
     console.log("Turning Left!!");
-  }
-}
+}}
 
 function resetTimer(course) {
   clearTimeout(timeoutId);
   consoleResponse(course);
 
   timeoutId = setTimeout(() => {
-    console.log("you lose");
+    console.log("TOO LATE!");
     process.exit();
   }, 2000);
 }
@@ -65,7 +64,7 @@ process.stdin.on("keypress", function (ch, key) {
 });
 
 function giveResponse(thekey) {
-  switch (value) {
+  switch (thekey) { //SHOULD THIS BE THEKEY
     case "a":
       console.log("LEFT");
       userInput = -1;
@@ -74,12 +73,20 @@ function giveResponse(thekey) {
       console.log("RIGHT");
       userInput = 1;
       break;
+    case "w":
+      console.log("UP!");
+      userInput = 2;
+      break;
+    case "s":
+      console.log("Holding on!");
+      userInput = -2;
+      break;
     default:
       return;
   }
   if (courseSegments[0] + userInput != 0) {
     // console.log(courseSegments[0]);
-    console.log("you lose!");
+    console.log("Ya got BUCKED, son!");
     console.log('your score is: '+ userScore)
     process.exit();
   }
