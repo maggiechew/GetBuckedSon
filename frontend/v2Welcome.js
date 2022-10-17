@@ -1,8 +1,7 @@
 import fetch from "node-fetch";
 import readlineSync from "readline-sync";
 import { theWholeGame } from "./theGame.js";
-let course;
-// import {giveResponse} from "./theGame.js"
+let courseLength;
 
 async function beWelcomed() {
   // let response = await fetch("http://localhost:3500/");
@@ -23,37 +22,35 @@ async function startGame() {
     let courseResponse = await fetch(
       `http://localhost:3500/getCourse?index=${index}`
     );
-    course = await courseResponse.json();
-    if (course.okay == "bye") {
+    courseLength = await courseResponse.json();
+    if (courseLength.okay == "bye") {
       console.log("okay, bye");
       process.exit(0);
     }
+    // console.log("the course length is: " + courseLength)
     console.log("now we play our game")
-    playingGame(course);
+    playingGame(courseLength);
   } else {
     console.log("okay, bye");
     process.exit(0);
   }
 }
 
-async function playingGame(course) {
+async function playingGame(thecourseLength) {
   console.log("we're playing a game!");
-  theWholeGame(course)
- 
+  let moveResponse = await fetch(`http://localhost:3500/playGame?course=${thecourseLength}`)
+  // let moveBody = await response.text();
+  // let move = moveBody.value
+  
+  // console.log(moveBody)
+  // result == "Winner" ? console.log("You win!") : console.log("You lose");
+  // let resultResponse = await fetch(
+  //   `http://localhost:3500/result?youarea=${result}`
+  // );
+  // let response = await resultResponse.text();
+  // console.log(response);
 }
 
-async function endgame(result){
-  console.log("the result is: " + result)
-  result == "Winner" ? console.log("You win!") : console.log("You lose");
-  let resultResponse = await fetch(
-    `http://localhost:3500/result?youarea=${result}`
-  );
-  let response = await resultResponse.text();
-  console.log(response);
-startGame()
-}
-
-export { course, endgame };
-
+export { courseLength as course };
 beWelcomed();
 // startGame()

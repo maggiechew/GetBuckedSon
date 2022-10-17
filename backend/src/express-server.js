@@ -1,6 +1,7 @@
 import express from "express";
 const app = express();
 const port = 3500;
+app.use(express.json())
 
 // import {startGame, nextThing} from "./welcome.js"
 let difficulties = ["Easy", "Medium", "Hard"];
@@ -68,4 +69,4 @@ app.get("/result", (req, res) => {
   }
 );
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+app.listen(port, () => console.log(`Original server listening on port ${port}!`));

@@ -1,6 +1,5 @@
 import readline from "node:readline";
 import { Writable } from "node:stream";
-import { endgame } from "./welcome.js";
 // import { makeRandom } from "./random-events.js";
 // import { course } from "./welcome.js";
 let course = [-1, 1, 1, -1, -1];
@@ -24,7 +23,11 @@ readline.createInterface({
 });
 
 function theWholeGame(course) {
-  resetTimer(course);
+  console.log("we got here!")
+  console.log("Originally the course was:" + course)
+  course = course.split(",")
+  console.log(typeof course)
+    resetTimer(course);
   process.on("exit", function (code) {
     if (code !== 0) {
       return "Loser";
@@ -51,8 +54,8 @@ function resetTimer(course) {
 
   timeoutId = setTimeout(() => {
     console.log("TOO LATE!");
-    userStatus = "Loser"
-    endgame(userStatus);
+
+    process.exit(1);
   }, 2000);
 }
 
@@ -66,7 +69,7 @@ process.stdin.on("keypress", function (ch, key) {
 
 function giveResponse(thekey) {
   switch (
-    thekey 
+    thekey //SHOULD THIS BE THEKEY
   ) {
     case "a":
       console.log("LEFT");
@@ -83,8 +86,8 @@ function giveResponse(thekey) {
     // console.log(course[0]);
     console.log("Ya got BUCKED, son!");
     userStatus = "Loser";
-    endgame(userStatus);
-    return
+    process.exit(1);
+
     // console.log('your score is: '+ userScore)
   }
   // console.log(course.length);
@@ -93,9 +96,10 @@ function giveResponse(thekey) {
     console.log("you win!");
     // clearTimeout(timeoutId)
     userStatus = "Winner";
-    // console.log("my userStatus is: " + userStatus);
-    endgame(userStatus);
-    return
+    console.log("my userStatus is: " + userStatus);
+    // return "Winner"
+    // console.log('your score is: '+ userScore)
+    process.exit();
   } else {
     course.shift();
     // userScore++
