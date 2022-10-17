@@ -32,7 +32,7 @@ function theWholeGame(course) {
 }
 export { theWholeGame };
 
-theWholeGame(course);
+// theWholeGame(course);
 
 function consoleResponse(course) {
   if (course[0] == 1) {

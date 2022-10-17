@@ -27,6 +27,7 @@ async function startGame() {
       console.log("okay, bye");
       process.exit(0);
     }
+    console.log("now we play our game")
     playingGame(course);
   } else {
     console.log("okay, bye");
