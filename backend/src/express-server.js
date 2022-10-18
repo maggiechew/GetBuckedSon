@@ -20,6 +20,7 @@ function setDifficulty(index) {
   if (index == -1) {
     return { okay: "bye" };
   }
+  course = []
   difficulty = difficulties[index];
   let courseLength;
   if (difficulty === "Easy") {
@@ -29,7 +30,7 @@ function setDifficulty(index) {
   } else if (difficulty === "Hard") {
     courseLength = 50;
   }
-
+console.log(courseLength)
   while (courseLength > 0) {
     let x = Math.random();
     if (x > 0.5) {course.push(1);}
@@ -44,6 +45,7 @@ function setDifficulty(index) {
 //     else course.push(-2);
 //     courseLength--;
 //   }
+console.log(course);
   return course;
 }
 

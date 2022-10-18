@@ -2,12 +2,14 @@ import readline from "node:readline";
 import { Writable } from "node:stream";
 import { endgame } from "./welcome.js";
 // import { makeRandom } from "./random-events.js";
-// import { course } from "./welcome.js";
-let course = [-1, 1, 1, -1, -1];
+import { course } from "./welcome.js";
+// let course = [-1, 1, 1, -1, -1];
 let timeoutId;
 let userInput;
 let value;
 let userStatus;
+
+// let testWholeGame;
 
 let mutableStdout = new Writable({
   write: function (chunk, encoding, callback) {
@@ -17,21 +19,24 @@ let mutableStdout = new Writable({
 });
 
 mutableStdout.muted = true;
-readline.createInterface({
-  input: process.stdin,
-  output: mutableStdout,
-  terminal: true,
-});
 
 function theWholeGame(course) {
+  // testWholeGame++;
+  // console.log("theWholeGame function has run " + testWholeGame + " times");
+  readline.createInterface({
+    input: process.stdin,
+    output: mutableStdout,
+    terminal: true,
+  });
   resetTimer(course);
   process.on("exit", function (code) {
+    clearTimeout(timeoutId);
+    // console.log("Timeout ID (cleared) is: " + timeoutId);
     if (code !== 0) {
       return "Loser";
     } else return "Winner";
   });
 }
-export { theWholeGame };
 
 // theWholeGame(course);
 
@@ -48,10 +53,13 @@ function consoleResponse(course) {
 function resetTimer(course) {
   clearTimeout(timeoutId);
   consoleResponse(course);
-
+  // console.log("Timeout ID is now: " + timeoutId);
   timeoutId = setTimeout(() => {
     console.log("TOO LATE!");
-    userStatus = "Loser"
+    userStatus = "Loser";
+    // console.log("Timeout ID is now: " + timeoutId);
+    // testWholeGame++;
+
     endgame(userStatus);
   }, 2000);
 }
@@ -65,9 +73,7 @@ process.stdin.on("keypress", function (ch, key) {
 });
 
 function giveResponse(thekey) {
-  switch (
-    thekey 
-  ) {
+  switch (thekey) {
     case "a":
       console.log("LEFT");
       userInput = -1;
@@ -83,19 +89,26 @@ function giveResponse(thekey) {
     // console.log(course[0]);
     console.log("Ya got BUCKED, son!");
     userStatus = "Loser";
+    // console.log("Timeout ID is: " + timeoutId);
+    clearTimeout(timeoutId)
+    // console.log("Cleared Timeout ID is: " + timeoutId);
+    // testWholeGame++;
     endgame(userStatus);
-    return
+    return;
     // console.log('your score is: '+ userScore)
   }
   // console.log(course.length);
   if (course.length == 1) {
     // userScore++
     console.log("you win!");
-    // clearTimeout(timeoutId)
+    // console.log("Timeout ID is: " + timeoutId);
+
+    clearTimeout(timeoutId)
     userStatus = "Winner";
     // console.log("my userStatus is: " + userStatus);
+    // testWholeGame++;
     endgame(userStatus);
-    return
+    return;
   } else {
     course.shift();
     // userScore++
@@ -108,3 +121,4 @@ function giveResponse(thekey) {
 // function letsStart(){
 // resetTimer(course);
 // }
+export { theWholeGame, timeoutId };
