@@ -30,7 +30,7 @@ function setDifficulty(index) {
   } else if (difficulty === "Hard") {
     courseLength = 50;
   }
-console.log(courseLength)
+// console.log(courseLength)
   while (courseLength > 0) {
     let x = Math.random();
     if (x > 0.5) {course.push(1);}
@@ -45,7 +45,7 @@ console.log(courseLength)
 //     else course.push(-2);
 //     courseLength--;
 //   }
-console.log(course);
+// console.log(course);
   return course;
 }
 
