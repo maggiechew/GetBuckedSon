@@ -1,4 +1,5 @@
 import express from "express";
+import { loserImage, winnerImage, tutorial } from "./server-objects.js";
 const app = express();
 const port = 3500;
 app.use(express.json())
@@ -8,6 +9,9 @@ let difficulties = ["Easy", "Medium", "Hard"];
 let difficulty;
 let userScore = 0;
 let course = [];
+let menu = ["Let's Play!", "Tutorial", "Update Username", "Exit Game"]
+let guestInfo = {
+  Name: "Guest"};
 
 function startGame() {
   return "Welcome";
@@ -30,33 +34,37 @@ function setDifficulty(index) {
   } else if (difficulty === "Hard") {
     courseLength = 50;
   }
-// console.log(courseLength)
   while (courseLength > 0) {
     let x = Math.random();
     if (x > 0.5) {course.push(1);}
     else {course.push(-1)}
     courseLength--;
   }
-//   while (courseLength > 0) {
-//     let x = Math.random();
-//     if (x > 0.75) course.push(1);
-//     else if (x >= 0.5) course.push(2);
-//     else if (x > 0.25) course.push(-1);
-//     else course.push(-2);
-//     courseLength--;
-//   }
-// console.log(course);
   return course;
 }
 
-function giveScore() {
-    
-  return `Your score is: ${userScore}`;
+function giveScore(result) {
+  let image;  
+  if (result === "Loser") {
+      image = loserImage;
+    } else if (result === "Winner") {
+      image = winnerImage;
+    }
+  return `${image}\n\nYour score is: ${userScore}`;
 }
 
 
 app.get("/", (req, res) => res.send(startGame()));
+app.get("/guestname", (req, res) => res.send(guestInfo));
 app.get("/start", (req, res) => res.send(getDifficulties()));
+app.get("/menu", (req, res) => res.send(menu))
+app.get("/tutorial", (req, res) => res.send(tutorial))
+app.put("/updateUserName", (req, res) => {
+  guestInfo = req.body;
+  res.send(guestInfo)
+})
+
+
 app.get("/getCourse", (req, res) => {
   let difficultyIndex = req.query.index;
 
@@ -67,7 +75,7 @@ app.get("/result", (req, res) => {
   if (result == "Winner") {
     userScore++}
     
-    res.send(giveScore());
+    res.send(giveScore(result));
   }
 );
 

@@ -1,0 +1,12 @@
+import mongoose from "./mongoose";
+const { Schema } = mongoose;
+
+const userSchema = new Schema ({
+    name : {type: String, required: true},
+    password: {type: String, required: true},
+    topScore: Number,
+    totalScore: Number
+})
+const User = mongoose.model("User", userSchema)
+
+
