@@ -1,5 +1,5 @@
 import { loserImage, winnerImage, welcomeImage } from "./server-objects.js";
-import {userInfo} from "./server-objects.js"
+import {userInfo} from "./express-server.js"
 
 let difficulties = ["Easy", "Medium", "Hard"];
 

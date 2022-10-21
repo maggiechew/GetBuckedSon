@@ -106,8 +106,9 @@ async function gameMenu() {
       break;
   }
 }
-// need: start menu ( options include: update username, show tutorial, play a game... always shows your score)
-// need: split startGame function into two different functions (or, remove first part entirely)
+// need: start menu ( always shows your score)
+// 60bpm: https://freesound.org/people/digifishmusic/sounds/49112/
+//https://www.imusic-school.com/en/tools/online-metronome/
 
 async function chooseDifficulty() {
   let startResponse = await fetch("http://localhost:3500/start");

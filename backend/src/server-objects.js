@@ -89,9 +89,6 @@ If you press the wrong key, or don't press it in time, you'll get BUCKED!
 
 `
 let menu = ["Let's Play!", "Tutorial", "Update Username", "Exit Game"];
-let userInfo = {
-  Name: "Guest",
-  Score: 0,
-};
 
-export {loserImage, winnerImage, welcomeImage, tutorial, menu, userInfo}
+
+export {loserImage, winnerImage, welcomeImage, tutorial, menu}

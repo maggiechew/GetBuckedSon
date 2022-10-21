@@ -1,6 +1,11 @@
 import {startGame, getDifficulties, setDifficulty, giveScore} from "./server-functions.js"
-import {tutorial, menu, userInfo} from "./server-objects.js"
+import {tutorial, menu} from "./server-objects.js"
 import express from "express";
+
+let userInfo = {
+  Name: "Guest",
+  Score: 0
+};
 
 const app = express();
 const port = 3500;
