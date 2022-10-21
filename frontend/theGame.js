@@ -1,7 +1,7 @@
 import readline from "node:readline";
 import { Writable } from "node:stream";
-import { endgame } from "./welcome.js";
-import { course } from "./welcome.js";
+import { endgame } from "./index.js";
+import { course } from "./index.js";
 let timeoutId;
 let userInput;
 let value;
@@ -49,13 +49,9 @@ function consoleResponse(course) {
 function resetTimer(course) {
   clearTimeout(timeoutId);
   consoleResponse(course);
-  // console.log("Timeout ID is now: " + timeoutId);
   timeoutId = setTimeout(() => {
     console.log("TOO LATE!");
     userStatus = "Loser";
-    // console.log("Timeout ID is now: " + timeoutId);
-    // testWholeGame++;
-
     endgame(userStatus);
   }, 2000);
 }

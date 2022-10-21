@@ -67,6 +67,17 @@ let winnerImage = `
                                ::^~~!!!77?JJYYYY5YYYY5YYYYYJ77!!!~~^::
                                             :::::::::::::`
 
+let welcomeImage = `
+
+██████╗ ███████╗████████╗    ██████╗ ██╗   ██╗ ██████╗██╗  ██╗███████╗██████╗        ███████╗ ██████╗ ███╗   ██╗██╗
+██╔════╝ ██╔════╝╚══██╔══╝    ██╔══██╗██║   ██║██╔════╝██║ ██╔╝██╔════╝██╔══██╗       ██╔════╝██╔═══██╗████╗  ██║██║
+██║  ███╗█████╗     ██║       ██████╔╝██║   ██║██║     █████╔╝ █████╗  ██║  ██║       ███████╗██║   ██║██╔██╗ ██║██║
+██║   ██║██╔══╝     ██║       ██╔══██╗██║   ██║██║     ██╔═██╗ ██╔══╝  ██║  ██║       ╚════██║██║   ██║██║╚██╗██║╚═╝
+╚██████╔╝███████╗   ██║       ██████╔╝╚██████╔╝╚██████╗██║  ██╗███████╗██████╔╝▄█╗    ███████║╚██████╔╝██║ ╚████║██╗
+ ╚═════╝ ╚══════╝   ╚═╝       ╚═════╝  ╚═════╝  ╚═════╝╚═╝  ╚═╝╚══════╝╚═════╝ ╚═╝    ╚══════╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝
+                                                                                                                    
+`
+
 
 let tutorial = `Are you ready to GET BUCKED, SON????? :) 
 
@@ -77,6 +88,10 @@ To lean left, press "A"... to lean right, press "D"
 If you press the wrong key, or don't press it in time, you'll get BUCKED!
 
 `
+let menu = ["Let's Play!", "Tutorial", "Update Username", "Exit Game"];
+let userInfo = {
+  Name: "Guest",
+  Score: 0,
+};
 
-
-export {loserImage, winnerImage, tutorial}
+export {loserImage, winnerImage, welcomeImage, tutorial, menu, userInfo}
