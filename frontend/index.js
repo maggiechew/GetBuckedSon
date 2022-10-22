@@ -22,19 +22,102 @@ function byeBye() {
   process.exit(0);
 }
 
-async function welcomeScreen() {
+async function openingScreen() {
   clearConsoleAndScrollbackBuffer();
-let welcomeResponse = await fetch("http://localhost:3500/")
-let welcome = await welcomeResponse.text();
-console.log(welcome)
-
-  // console.log("Welcome to my game!"); // UPDATE: ASCII TEXT OF GAME NAME
-  let guestInfoResponse = await fetch("http://localhost:3500/guestname");
-  userInfo = await guestInfoResponse.json();
+  let welcomeResponse = await fetch("http://localhost:3500/");
+  let welcome = await welcomeResponse.text();
+  console.log(welcome);
+  let userInfoResponse = await fetch("http://localhost:3500/guestname");
+  userInfo = await userInfoResponse.json();
+  // console.log(userInfo)
   readlineSync
     .keyIn('Press "S" to start', { limit: "s" }, { hideEchoback: true })
     .toLowerCase();
-  gameMenu();
+  chooseMenu();
+}
+
+function chooseMenu() {
+  if (!userInfo._id) {
+    guestMenu();
+  } else loggedInMenu();
+}
+
+async function loggedInMenu() {
+  clearConsoleAndScrollbackBuffer();
+  // console.log(userInfo);
+  console.log(`Welcome, ${userInfo.name}`);
+  let menuResponse = await fetch("http://localhost:3500/mainMenu?type=user");
+  let menuChoices = await menuResponse.json();
+  console.log("Please make a selection");
+  let menu = readlineSync.keyInSelect(menuChoices);
+  switch (menu) {
+    case 0:
+      console.log("YEEEEEHAWWWW! GIDDY UP, PARDNER!");
+      chooseDifficulty();
+      break;
+    case 1:
+      showTutorial();
+      break;
+    case 2:
+      updateGuestName();/// TODO: new function for updating existing user name (patch?)
+      break;
+    case 3:
+      newUser(); /// TODO: function to reset userInfo to default values
+      break;
+    case 4:
+      byeBye();
+      break;
+    case -1:
+      console.log("Returning to the menu...");
+      setTimeout(() => {
+        clearConsoleAndScrollbackBuffer();
+        openingScreen();
+      }, 1000);
+      break;
+    default:
+      console.log("Invalid input... please press a valid number!");
+      menu();
+      break;
+  }
+}
+
+async function guestMenu() {
+  clearConsoleAndScrollbackBuffer();
+  // console.log(userInfo);
+  console.log(`Welcome, ${userInfo.name}`);
+  let menuResponse = await fetch("http://localhost:3500/mainMenu?type=guest");
+  let menuChoices = await menuResponse.json();
+  console.log("Please make a selection");
+  let menu = readlineSync.keyInSelect(menuChoices);
+  switch (menu) {
+    case 0:
+      console.log("YEEEEEHAWWWW! GIDDY UP, PARDNER!");
+      chooseDifficulty();
+      break;
+    case 1:
+      showTutorial();
+      break;
+    case 2:
+      updateGuestName();
+      break;
+    case 3:
+      newUser();
+      break;
+    case 4:
+      byeBye();
+      break;
+    case -1:
+      console.log("Returning to the menu...");
+      setTimeout(() => {
+        clearConsoleAndScrollbackBuffer();
+        openingScreen();
+      }, 1000);
+      break;
+    default:
+      console.log("Invalid input... please press a valid number!");
+      menu();
+      break;
+  }
 }
 
 async function showTutorial() {
@@ -50,11 +133,11 @@ async function showTutorial() {
         { hideEchoback: true }
       )
       .toLowerCase();
-    gameMenu();
+    chooseMenu();
   }, 1000);
 }
 
-async function updateUsername() {
+async function updateGuestName() {
   let newUser = { Name: "" };
   clearConsoleAndScrollbackBuffer();
   newUser.Name = readlineSync.question("Please enter a new name: ");
@@ -68,44 +151,48 @@ async function updateUsername() {
   );
   userInfo = await updateUsernameResponse.json();
   console.log("Your new username is now: " + userInfo.Name);
-  // timeout(gameMenu(), 1000) // FIX ME
-  gameMenu();
+  setTimeout(() => {
+    readlineSync
+      .keyIn(
+        'Press "M" to return to menu',
+        { limit: "m" },
+        { hideEchoback: true }
+      )
+      .toLowerCase();
+    chooseMenu();
+  }, 1000);
 }
 
-async function gameMenu() {
+async function newUser() {
   clearConsoleAndScrollbackBuffer();
-  console.log(`Welcome, ${userInfo.Name}`);
-  let menuResponse = await fetch("http://localhost:3500/mainMenu");
-  let menuChoices = await menuResponse.json();
-  console.log("Please make a selection");
-  let menu = readlineSync.keyInSelect(menuChoices);
-  switch (menu) {
-    case 0:
-      console.log("YEEEEEHAWWWW! GIDDY UP, PARDNER!");
-      chooseDifficulty();
-      break;
-    case 1:
-      showTutorial();
-      break;
-    case 2:
-      updateUsername();
-      break;
-    case 3:
-      byeBye();
-      break;
-    case -1:
-      console.log("Returning to the menu...");
-      setTimeout(() => {
-        clearConsoleAndScrollbackBuffer();
-        welcomeScreen();
-      }, 1000);
-      break;
-    default:
-      console.log("Invalid input... please press a valid number!");
-      menu();
-      break;
-  }
+  console.log("New User Account Creation");
+  console.log("Please enter your information here");
+  let username = readlineSync.question(["Please enter your name: "]);
+  let password = readlineSync.questionNewPassword();
+
+  let userToShare = { name: username, password: password };
+  let newUserResponse = await fetch("http://localhost:3500/newuser", {
+    method: "POST",
+    headers: { "Content-Type": "application/json;charset=utf-8" },
+    body: JSON.stringify(userToShare),
+  });
+  userInfo = await newUserResponse.json();
+  // console.log(userInfo)
+  console.log(
+    `Your name is: ${userInfo.name} and your password is: ${userInfo.password}`
+  );
+  setTimeout(() => {
+    readlineSync
+      .keyIn(
+        'Press "M" to return to menu',
+        { limit: "m" },
+        { hideEchoback: true }
+      )
+      .toLowerCase();
+    chooseMenu();
+  }, 1000);
 }
+
 // need: start menu ( always shows your score)
 // 60bpm: https://freesound.org/people/digifishmusic/sounds/49112/
 //https://www.imusic-school.com/en/tools/online-metronome/
@@ -143,34 +230,33 @@ async function endgame(result) {
   );
   let response = await resultResponse.text();
   console.log(response);
- 
 
   setTimeout(() => {
-
     let menuChoices = ["Play Again", "Change Difficulty", "Return to Menu"];
-    console.log("What next? (Press 0 to quick-exit the game)")
-  let menu = readlineSync.keyInSelect(menuChoices);
-  switch (menu) {
-    case 0:
-      startingGame();
-      break;
-    case 1:
-      chooseDifficulty();
-      break;
-    case 2:
-      gameMenu();
-      break;
-    case -1:
-      byeBye()
-      break;
-    default:
-      console.log("Invalid input... please press a valid number!");
-      menu();
-      break;
-  }}, 1000);
+    console.log("What next? (Press 0 to quick-exit the game)");
+    let menu = readlineSync.keyInSelect(menuChoices);
+    switch (menu) {
+      case 0:
+        startingGame();
+        break;
+      case 1:
+        chooseDifficulty();
+        break;
+      case 2:
+        chooseMenu();
+        break;
+      case -1:
+        byeBye();
+        break;
+      default:
+        console.log("Invalid input... please press a valid number!");
+        menu();
+        break;
+    }
+  }, 1000);
 }
 
 export { course, endgame };
 
-welcomeScreen();
+openingScreen();
 // startGame()

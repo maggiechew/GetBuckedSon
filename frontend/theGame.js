@@ -7,6 +7,10 @@ let userInput;
 let value;
 let userStatus;
 
+import Audic from 'audic';
+
+const bpm = new Audic('hundredSixtyBPM.mp3');
+
 let mutableStdout = new Writable({
   write: function (chunk, encoding, callback) {
     if (!this.muted) process.stdout.write(chunk, encoding);
@@ -37,6 +41,7 @@ const TURN_LEFT = -1;
 const TURN_RIGHT = 1;
 
 function consoleResponse(course) {
+  bpm.play();
   if (course[0] === TURN_RIGHT) {
     console.log("Turning Right!!");
   } else if (course[0] === TURN_LEFT) {
@@ -48,6 +53,8 @@ function consoleResponse(course) {
 
 function resetTimer(course) {
   clearTimeout(timeoutId);
+  
+
   consoleResponse(course);
   timeoutId = setTimeout(() => {
     console.log("TOO LATE!");
@@ -57,7 +64,7 @@ function resetTimer(course) {
 }
 
 process.stdin.on("keypress", function (ch, key) {
-  if (key && key.ctrl && key.name === "c") {
+  if (key.ctrl && key.name === "c") {
     process.stdin.pause();
   }
   value = key.sequence;

@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
 
 
-mongoose.connect('mongodb://localhost:27017/test') // UPDATE
+mongoose.connect('mongodb+srv://MAdminChew:SbTm0D9s4zMNyguB@cluster0.fazjowh.mongodb.net/?retryWrites=true&w=majority') // UPDATE
 export default mongoose;

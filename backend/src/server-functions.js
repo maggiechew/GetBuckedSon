@@ -1,5 +1,5 @@
 import { loserImage, winnerImage, welcomeImage } from "./server-objects.js";
-import {userInfo} from "./express-server.js"
+import {currentScore} from "./express-server.js"
 
 let difficulties = ["Easy", "Medium", "Hard"];
 
@@ -45,7 +45,7 @@ function startGame() {
     } else if (result === "Winner") {
       image = winnerImage;
     }
-    return `${image}\n\nYour score is: ${userInfo.Score}`;
+    return `${image}\n\nYour score is: ${currentScore}`;
   }
 
   export {startGame, getDifficulties, setDifficulty, giveScore}
