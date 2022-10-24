@@ -94,7 +94,7 @@ function giveResponse(thekey) {
   if (course.length === 1) {
     /// if we're at the last segment in the array
     clearTimeout(timeoutId);
-    console.log("YOU WIN!");
+    console.log(`\n\nYOU WIN!\n\n`);
     userStatus = "Winner";
     endgame(userStatus);
     return;

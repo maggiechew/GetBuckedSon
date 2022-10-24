@@ -88,8 +88,8 @@ To lean left, press "A"... to lean right, press "D"
 If you press the wrong key, or don't press it in time, you'll get BUCKED!
 
 `
-let guestMenu = ["Let's Play!", "Tutorial", "Change name", "Log In", "Create User Account", "Exit Game"];
-let userMenu = ["Let's Play!", "Tutorial", "Update Username", "Log Out", "Exit Game"];
+let menu = ["Let's Play!", "Tutorial", "User Menu", "Exit Game"];
+// let userMenu = ["Let's Play!", "Tutorial", "Update Username", "Log Out", "Exit Game"];
 
 
-export {loserImage, winnerImage, welcomeImage, tutorial, guestMenu, userMenu}
+export {loserImage, winnerImage, welcomeImage, tutorial, menu}

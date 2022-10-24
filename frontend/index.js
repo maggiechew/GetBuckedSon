@@ -1,10 +1,22 @@
 import fetch from "node-fetch";
 import readlineSync from "readline-sync";
 import { theWholeGame } from "./theGame.js";
+import { chooseMenu, menuChoices} from "./menus.js";
+import Audic from "audic";
+import {loserImage, winnerImage, welcomeImage} from "./frontend-Objects.js"
+
 let course;
 let difficulties;
-let userInfo;
+
 let index;
+
+const slowBPM = new Audic("120bpm-16bars.mp3");
+
+let userInfo = {
+  name: "Guest",
+  currentScore: 0
+};
+// let currentScore = 0;
 
 function clearConsoleAndScrollbackBuffer() {
   process.stdout.write("\u001b[3J\u001b[2J\u001b[1J");
@@ -24,143 +36,20 @@ function byeBye() {
 
 async function openingScreen() {
   clearConsoleAndScrollbackBuffer();
-  let welcomeResponse = await fetch("http://localhost:3500/");
-  let welcome = await welcomeResponse.text();
-  console.log(welcome);
-  let userInfoResponse = await fetch("http://localhost:3500/guestname");
-  userInfo = await userInfoResponse.json();
-  // console.log(userInfo)
+  console.log(welcomeImage);
   readlineSync
     .keyIn('Press "S" to start', { limit: "s" }, { hideEchoback: true })
     .toLowerCase();
-  chooseMenu();
+  mainMenu();
 }
 
-function chooseMenu() {
-  if (!userInfo._id) {
-    guestMenu();
-  } else loggedInMenu();
-}
-
-async function loggedInMenu() {
+function mainMenu() {
   clearConsoleAndScrollbackBuffer();
-  // console.log(userInfo);
-  console.log(`Welcome, ${userInfo.name}`);
-  let menuResponse = await fetch("http://localhost:3500/mainMenu?type=user");
-  let menuChoices = await menuResponse.json();
-  console.log("Please make a selection");
-  let menu = readlineSync.keyInSelect(menuChoices);
-  switch (menu) {
-    case 0:
-      console.log("YEEEEEHAWWWW! GIDDY UP, PARDNER!");
-      chooseDifficulty();
-      break;
-    case 1:
-      showTutorial();
-      break;
-    case 2:
-      updateGuestName();/// TODO: new function for updating existing user name (patch?)
-      break;
-    case 3:
-      newUser(); /// TODO: function to reset userInfo to default values
-      break;
-    case 4:
-      byeBye();
-      break;
-    case -1:
-      console.log("Returning to the menu...");
-      setTimeout(() => {
-        clearConsoleAndScrollbackBuffer();
-        openingScreen();
-      }, 1000);
-      break;
-    default:
-      console.log("Invalid input... please press a valid number!");
-      menu();
-      break;
-  }
-}
+  console.log(`Welcome, ${userInfo.name}\n`);
+  scoreIfLoggedIn();
+  // console.log("\n")
+  menuChoices();
 
-async function guestMenu() {
-  clearConsoleAndScrollbackBuffer();
-  // console.log(userInfo);
-  console.log(`Welcome, ${userInfo.name}`);
-  let menuResponse = await fetch("http://localhost:3500/mainMenu?type=guest");
-  let menuChoices = await menuResponse.json();
-  console.log("Please make a selection");
-  let menu = readlineSync.keyInSelect(menuChoices);
-  switch (menu) {
-    case 0:
-      console.log("YEEEEEHAWWWW! GIDDY UP, PARDNER!");
-      chooseDifficulty();
-      break;
-    case 1:
-      showTutorial();
-      break;
-    case 2:
-      updateGuestName();
-      break;
-    case 3:
-      newUser();
-      break;
-    case 4:
-      byeBye();
-      break;
-    case -1:
-      console.log("Returning to the menu...");
-      setTimeout(() => {
-        clearConsoleAndScrollbackBuffer();
-        openingScreen();
-      }, 1000);
-      break;
-    default:
-      console.log("Invalid input... please press a valid number!");
-      menu();
-      break;
-  }
-}
-
-async function showTutorial() {
-  clearConsoleAndScrollbackBuffer();
-  let tutorialResponse = await fetch("http://localhost:3500/tutorial");
-  let tutorial = await tutorialResponse.text();
-  console.log(tutorial);
-  setTimeout(() => {
-    readlineSync
-      .keyIn(
-        'Press "M" to return to menu',
-        { limit: "m" },
-        { hideEchoback: true }
-      )
-      .toLowerCase();
-    chooseMenu();
-  }, 1000);
-}
-
-async function updateGuestName() {
-  let newUser = { Name: "" };
-  clearConsoleAndScrollbackBuffer();
-  newUser.Name = readlineSync.question("Please enter a new name: ");
-  let updateUsernameResponse = await fetch(
-    "http://localhost:3500/updateUserName",
-    {
-      method: "PUT",
-      headers: { "Content-Type": "application/json;charset=utf-8" },
-      body: JSON.stringify(newUser),
-    }
-  );
-  userInfo = await updateUsernameResponse.json();
-  console.log("Your new username is now: " + userInfo.Name);
-  setTimeout(() => {
-    readlineSync
-      .keyIn(
-        'Press "M" to return to menu',
-        { limit: "m" },
-        { hideEchoback: true }
-      )
-      .toLowerCase();
-    chooseMenu();
-  }, 1000);
 }
 
 async function newUser() {
@@ -168,9 +57,15 @@ async function newUser() {
   console.log("New User Account Creation");
   console.log("Please enter your information here");
   let username = readlineSync.question(["Please enter your name: "]);
-  let password = readlineSync.questionNewPassword();
+  let password = readlineSync.question(["Please enter your password: "]);
 
-  let userToShare = { name: username, password: password };
+  let userToShare = {
+    name: username,
+    password: password,
+    topScore: 0,
+    totalScore: 0,
+    currentScore: 0
+  };
   let newUserResponse = await fetch("http://localhost:3500/newuser", {
     method: "POST",
     headers: { "Content-Type": "application/json;charset=utf-8" },
@@ -189,13 +84,9 @@ async function newUser() {
         { hideEchoback: true }
       )
       .toLowerCase();
-    chooseMenu();
+    mainMenu();
   }, 1000);
 }
-
-// need: start menu ( always shows your score)
-// 60bpm: https://freesound.org/people/digifishmusic/sounds/49112/
-//https://www.imusic-school.com/en/tools/online-metronome/
 
 async function chooseDifficulty() {
   let startResponse = await fetch("http://localhost:3500/start");
@@ -205,9 +96,31 @@ async function chooseDifficulty() {
   index = readlineSync.keyInSelect(difficulties);
 
   if (index === -1) {
-    byeBye();
+    console.log("Returning to menu...");
+    setTimeout(() => {
+      mainMenu();
+    }, 2000);
   }
   startingGame();
+}
+
+function logOutResetToGuest(){
+  clearConsoleAndScrollbackBuffer();
+  userInfo = {
+    name: "Guest",
+    currentScore: 0
+  };
+  console.log('You are now logged out!')
+  console.log(`Name: ${userInfo.name}\nCurrentScore: ${userInfo.currentScore}`)
+  setTimeout(() => {
+    let selection = readlineSync
+      .keyIn(
+        'Press "M" to return to menu, or "Q" to quit the game.',
+        { limit: ["m", "q" ]},
+        { hideEchoback: true }
+      ).toLowerCase();
+      selection === "m"? mainMenu() : byeBye()
+  }, 1000);
 }
 
 async function startingGame() {
@@ -221,16 +134,45 @@ async function startingGame() {
 async function playingGame(course) {
   console.log("Let's gooooo!");
   clearConsoleAndScrollbackBuffer();
+  slowBPM.play();
   theWholeGame(course);
 }
 
-async function endgame(result) {
-  let resultResponse = await fetch(
-    `http://localhost:3500/result?youarea=${result}`
-  );
-  let response = await resultResponse.text();
-  console.log(response);
+function scoreIfLoggedIn() {
+  if (userInfo._id) {
+    console.log("Your total score is: " + userInfo.totalScore);
+    // console.log("Your top score is: " + userInfo.topScore);
+  }
+  console.log(`Your current score is: ${userInfo.currentScore}\n`)
+}
 
+async function endgame(result) {
+  if (result === "Winner") { // if they're a winner
+
+    console.log(winnerImage)
+    +userInfo.currentScore++;
+    console.log("Current score is: " + userInfo.currentScore);
+    if (userInfo._id) { // if they're logged in
+      // console.log("Verily I did get here");
+      userInfo.totalScore += userInfo.currentScore;
+      // if (userInfo.tota) {}
+      let resultResponse = await fetch(`http://localhost:3500/winnerwinner`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json;charset=utf-8" },
+        body: JSON.stringify(userInfo),
+      })
+      userInfo = await resultResponse.json();
+
+    
+  console.log("Total score is: " + userInfo.totalScore)
+  // console.log("Top score is: " + userInfo.topScore)
+      ;
+    }
+  }
+  if (result === "Loser") {
+    console.log(loserImage);
+    console.log("Current score is: " + userInfo.currentScore);
+  }
   setTimeout(() => {
     let menuChoices = ["Play Again", "Change Difficulty", "Return to Menu"];
     console.log("What next? (Press 0 to quick-exit the game)");
@@ -243,7 +185,7 @@ async function endgame(result) {
         chooseDifficulty();
         break;
       case 2:
-        chooseMenu();
+        mainMenu();
         break;
       case -1:
         byeBye();
@@ -256,7 +198,26 @@ async function endgame(result) {
   }, 1000);
 }
 
-export { course, endgame };
+
+function updatingUserInfo(newinfo) {
+  userInfo = newinfo;
+  userInfo.currentScore = 0;
+}
+
+
+export {
+  course,
+  userInfo,
+  clearConsoleAndScrollbackBuffer,
+  endgame,
+  chooseDifficulty,
+  newUser,
+  byeBye,
+  openingScreen,
+  mainMenu,
+  updatingUserInfo,
+  logOutResetToGuest
+};
 
 openingScreen();
 // startGame()

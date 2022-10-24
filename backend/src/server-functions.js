@@ -1,51 +1,51 @@
-import { loserImage, winnerImage, welcomeImage } from "./server-objects.js";
-import {currentScore} from "./express-server.js"
+// import { welcomeImage } from "./server-objects.js";
+import { User } from "./mongo-stuff.js";
 
 let difficulties = ["Easy", "Medium", "Hard"];
 
+// function startGame() {
+//   return welcomeImage;
+// }
 
-function startGame() {
-    return welcomeImage;
+function getDifficulties() {
+  return difficulties;
+}
+
+function setDifficulty(index) {
+  if (index == -1) {
+    return { okay: "bye" };
   }
-
-  function getDifficulties() {
-    return difficulties;
+  let course = [];
+  let courseLength;
+  if (difficulties[index] === "Easy") {
+    courseLength = 10;
+  } else if (difficulties[index] === "Medium") {
+    courseLength = 20;
+  } else if (difficulties[index] === "Hard") {
+    courseLength = 50;
   }
-
-  function setDifficulty(index) {
-    if (index == -1) {
-      return { okay: "bye" };
+  while (courseLength > 0) {
+    let x = Math.random();
+    if (x > 0.5) {
+      course.push(1);
+    } else {
+      course.push(-1);
     }
-    let course = [];
-    let courseLength;
-    if (difficulties[index] === "Easy") {
-      courseLength = 10;
-    } else if (difficulties[index] === "Medium") {
-      courseLength = 20;
-    } else if (difficulties[index] === "Hard") {
-      courseLength = 50;
-    }
-    while (courseLength > 0) {
-      let x = Math.random();
-      if (x > 0.5) {
-        course.push(1);
-      } else {
-        course.push(-1);
-      }
-      courseLength--;
-    }
-    return course;
+    courseLength--;
   }
+  return course;
+}
 
+async function mongoScoreValidation(userInfo) {
+  // console.log("I got here");
+  let user = await User.findById(userInfo._id);
+  user.name = userInfo.name;
+  user.password = userInfo.password;
+  user.topScore = userInfo.topScore;
+user.totalScore = userInfo.totalScore;
+user.currentScore = userInfo.currentScore;
+console.log(user)
+  return await user.save();
+}
 
-  function giveScore(result) {
-    let image;
-    if (result === "Loser") {
-      image = loserImage;
-    } else if (result === "Winner") {
-      image = winnerImage;
-    }
-    return `${image}\n\nYour score is: ${currentScore}`;
-  }
-
-  export {startGame, getDifficulties, setDifficulty, giveScore}
+export { getDifficulties, setDifficulty, mongoScoreValidation };

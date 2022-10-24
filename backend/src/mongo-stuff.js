@@ -5,28 +5,41 @@ const userSchema = new Schema(
   {
     name: { type: String, required: true },
     password: { type: String, required: true },
-    topScore: Number,
-    totalScore: Number
+    topScore: {type: Number, required: true },
+    totalScore: {type: Number, required: true },
+    currentScore: {type: Number, required: true}
   },
   {
     statics: {
       async findByLogin(name, password) {
-        let user = await this.find({ name: name, password: password });
+        let user; 
+        console.log(
+          `Name is: ${name}, password is ${password}`)
+        user = await this.findOne({ name: name });
         if (!user) {
           throw new Error("No Such Username Found");
         }
         if (password !== user.password) {
           throw new Error("Incorrect Password");
-        } else {
-          return user;
-        }
+        } 
+        return user;
+        
       },
       newUser(data) {
         return User.create(data);
-      }
-    },
+      },
+    //   async findById(id) {
+    //     let user= await this.findById({_id: id});
+    //     if (!user) {
+    //       throw new Error("Invalid user")
+    //     } else {
+    //       return user;
+    //     }
+    // }
   }
+}
 );
+
 const User = mongoose.model("User", userSchema);
 
 async function newUser(data) {
