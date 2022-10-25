@@ -1,4 +1,4 @@
-import { userInfo, clearConsoleAndScrollbackBuffer, logOutResetToGuest } from "./index.js";
+import { userInfo, clearConsoleAndScrollbackBuffer, logOutResetToGuest, loggedIn, updatingLoggedIn } from "./index.js";
 import fetch from "node-fetch";
 import readlineSync from "readline-sync";
 import {
@@ -13,15 +13,15 @@ import { menu, tutorial } from "./frontend-Objects.js";
 
 //chooseDifficulty, showTutorial, updateGuestName, newUser, byebye, openingscreen
 
-function chooseMenu() {
-  if (!userInfo._id) {
-    guestMenu();
-  } else loggedInMenu();
-}
+// function chooseMenu() {
+//   if (!userInfo._id) {
+//     guestMenu();
+//   } else loggedInMenu();
+// }
 
 function userMenu() {
   clearConsoleAndScrollbackBuffer();
-  if (!userInfo._id) {
+  if (!loggedIn) {
     let menu = ["Update your guest name", "Log In", "Create New Account"];
     console.log(
       "Please make your selection. Press 0 to return to the previous menu."
@@ -39,6 +39,7 @@ function userMenu() {
         break;
       case 2:
         newUser();
+        break;
       case -1:
         console.log("Returning to previous menu...");
         setTimeout(() => {
@@ -47,7 +48,7 @@ function userMenu() {
         }, 1000);
     }
   }
-  if (userInfo._id) {
+  if (loggedIn) {
     let menu = ["Log Out"];
     console.log(
       "Please make your selection. Press 0 to return to the previous menu."
@@ -158,33 +159,28 @@ async function logIn() {
     // console.log(loginAttempt);
     updatingUserInfo(loginAttempt);
     // console.log(userInfo);
-    console.log("You are now logged in as: " + userInfo.name);
+    updatingLoggedIn();
+    console.log("\nYou are now logged in as: " + userInfo.name);
     // !userInfo.password
     // ? ""
     // : console.log(`Your password is: ${userInfo.password}`);
-    // !userInfo.topScore
-    //   ? ""
-    //   : console.log(`Your top score is: ${userInfo.topScore}`);
+    !userInfo.highScore
+      ? ""
+      : console.log(`\nYour high score is: ${userInfo.highScore}`);
     !userInfo.totalScore
       ? ""
-      : console.log(`Your total score is: ${userInfo.totalScore}`);
+      : console.log(`Your total score is: ${userInfo.totalScore}\n`);
   }
 
   setTimeout(() => {
-    let menuChoice = readlineSync
+    readlineSync
       .keyIn(
         'Press "M" to return to menu',
         { limit: "m" },
         { hideEchoback: true }
       )
       .toLowerCase();
-
-    if (menuChoice === "m") {
       mainMenu();
-    }
-    if (menuChoice === "u") {
-      logIn();
-    }
   }, 1000);
 }
 
@@ -204,4 +200,4 @@ async function showTutorial() {
   }, 1000);
 }
 
-export { chooseMenu, menuChoices };
+export { menuChoices };

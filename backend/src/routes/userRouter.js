@@ -30,6 +30,4 @@ userRouter.put("/updateGuestName", (req, res) => {
     res.send(userInfo);
   });
 
-
-
 export default userRouter;

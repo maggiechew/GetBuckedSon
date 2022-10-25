@@ -3,7 +3,7 @@ import {
   setDifficulty,
   mongoScoreValidation,
 } from "./server-functions.js";
-import { tutorial, guestMenu, userMenu } from "./server-objects.js";
+// import { tutorial, guestMenu, userMenu } from "./server-objects.js";
 import express from "express";
 import { User } from "./mongo-stuff.js";
 import userRouter from "./routes/userRouter.js";
@@ -16,7 +16,7 @@ app.use("/user", userRouter);
 app.get("/", (req, res) => res.send(startGame()));
 app.get("/guestname", (req, res) => res.send(userInfo));
 app.get("/start", (req, res) => res.send(getDifficulties()));
-app.get("/mainMenu", (req, res) => {
+app.get("/mainMenu", (req, res) => { // TODO: delete?
   let type = req.query.type;
   if (type === "user") {
     res.send(userMenu);
@@ -24,7 +24,7 @@ app.get("/mainMenu", (req, res) => {
     res.send(guestMenu);
   }
 });
-app.get("/tutorial", (req, res) => res.send({ message: tutorial }));
+app.get("/tutorial", (req, res) => res.send({ message: tutorial })); // TODO: delete?
 
 app.get("/getCourse", (req, res) => {
   let difficultyIndex = req.query.index;

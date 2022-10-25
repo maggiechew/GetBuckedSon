@@ -5,9 +5,9 @@ const userSchema = new Schema(
   {
     name: { type: String, required: true },
     password: { type: String, required: true },
-    topScore: {type: Number, required: true },
+    highScore: {type: Number, required: true },
     totalScore: {type: Number, required: true },
-    currentScore: {type: Number, required: true}
+    // currentScore: {type: Number, required: true}
   },
   {
     statics: {

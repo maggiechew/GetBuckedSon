@@ -41,9 +41,9 @@ async function mongoScoreValidation(userInfo) {
   let user = await User.findById(userInfo._id);
   user.name = userInfo.name;
   user.password = userInfo.password;
-  user.topScore = userInfo.topScore;
+  user.highScore = userInfo.highScore;
 user.totalScore = userInfo.totalScore;
-user.currentScore = userInfo.currentScore;
+// user.currentScore = userInfo.currentScore;
 console.log(user)
   return await user.save();
 }
