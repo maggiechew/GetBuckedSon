@@ -1,0 +1,22 @@
+{
+  "name": "getbuckedson",
+  "version": "1.0.0",
+  "description": "Game for IU C9 cohort (Project 1)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "init-server": "node ./backend/src/express-server.js",
+    "init-game": "node ./frontend/index.js",
+    "start": "npm run init-server && npm run init-game"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maggiechew/GetBuckedSon.git"
+  },
+  "author": "Maggie Chew",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/maggiechew/GetBuckedSon/issues"
+  },
+  "homepage": "https://github.com/maggiechew/GetBuckedSon#readme"
+}
