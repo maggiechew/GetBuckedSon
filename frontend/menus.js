@@ -142,7 +142,9 @@ async function showTutorial() {
     "Welcome to my game! Your mission- should you choose to accept it- is to " +
       chalk.red("STAY ON YOUR DONKEY!\n\n")
   );
-  await console.retro("When your donkey leans left...\n");
+
+  await console.retro("That ornery ol' donkey will do his best to throw you off by veering one way, then another; by holding on and leaning into turns, you will " + chalk.cyan('STAY PUT!\n'))
+  await console.retro("\nWhen your donkey leans left...\n");
   log(chalk.yellow(turningLeft));
 
   setTimeout(async () => {
@@ -174,9 +176,10 @@ To create your own user account- or access one you've already created- choose "U
       );
 
       setTimeout(() => {
+log(chalk.blueBright('Press "M" to return to menu'))
         readlineSync
           .keyIn(
-            'Press "M" to return to menu',
+            '',
             { limit: "m" },
             { hideEchoback: true }
           )
