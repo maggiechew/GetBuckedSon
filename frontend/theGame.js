@@ -18,11 +18,11 @@ let gameScore;
 
 
 
-import Audic from "audic";
+// import Audic from "audic";
 import { clear } from "node:console";
 import { mainMenu } from "./menus.js";
 
-const bpm = new Audic("hundredSixtyBPM.mp3");
+// const bpm = new Audic("hundredSixtyBPM.mp3");
 
 let mutableStdout = new Writable({
   write: function (chunk, encoding, callback) {
@@ -50,7 +50,7 @@ const TURN_LEFT = -1;
 const TURN_RIGHT = 1;
 
 function consoleResponse(course) {
-  bpm.play();
+  // bpm.play();
   if (course[0] === TURN_RIGHT) {
     log(chalk.green(turningRight));
   } else if (course[0] === TURN_LEFT) {
