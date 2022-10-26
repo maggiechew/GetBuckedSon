@@ -1,8 +1,12 @@
 import readline from "node:readline";
 import { Writable } from "node:stream";
-import { endgame, course, clearConsoleAndScrollbackBuffer } from "./index.js";
+import { clearConsoleAndScrollbackBuffer } from "./index.js";
+import { endgame, course } from "./game-functions.js";
 import { turningLeft, turningRight, leanedLeft, leanedRight, correct } from "./frontend-Objects.js";
-import chalk from 'chalk';
+import cfonts from "cfonts";
+import * as align from "@topcli/text-align";
+import chalk from "chalk";
+import chalkAnimation from "chalk-animation";
 const log = console.log;
 // import { course } from "./index.js";
 let timeoutId;
@@ -11,8 +15,13 @@ let value;
 let userStatus;
 let gameScore;
 
+
+
+
+
 import Audic from "audic";
 import { clear } from "node:console";
+import { mainMenu } from "./menus.js";
 
 const bpm = new Audic("hundredSixtyBPM.mp3");
 
@@ -49,11 +58,15 @@ const TURN_RIGHT = 1;
 function consoleResponse(course) {
   bpm.play();
   if (course[0] === TURN_RIGHT) {
-    console.log(turningRight);
+    log(chalk.green(turningRight));
   } else if (course[0] === TURN_LEFT) {
-    console.log(turningLeft);
+    log(chalk.yellow(turningLeft));
   } else {
-    console.log("Error!!!!");
+  clearTimeout(timeoutId);
+  console.log('A devastating error has happened. Please hold......')
+  setTimeout( () => {
+    mainMenu()
+  }, 1500)
   }
 }
 
@@ -65,7 +78,7 @@ function resetTimer(course) {
     clearConsoleAndScrollbackBuffer();
     userStatus = "Loser";
     endgame(userStatus, gameScore, "toolate");
-  }, 2000);
+  }, 1000);
 }
 
 process.stdin.on("keypress", function (ch, key) {
@@ -117,7 +130,7 @@ function giveResponse(thekey) {
   if (course.length === 1) {
     /// if we're at the last segment in the array
     clearTimeout(timeoutId);
-    console.log(`\n\nYOU WIN!\n\n`);
+    // console.log(`\n\nYOU WIN!\n\n`);
     console.log(gameScore);
     userStatus = "Winner";
     endgame(userStatus, gameScore);
