@@ -1,11 +1,6 @@
-// import { welcomeImage } from "./server-objects.js";
-import { User } from "./mongo-stuff.js";
+import { User } from "./user-model.js";
 
 let difficulties = ["Easy", "Medium", "Hard"];
-
-// function startGame() {
-//   return welcomeImage;
-// }
 
 function getDifficulties() {
   return difficulties;

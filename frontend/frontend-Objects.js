@@ -3,10 +3,7 @@ import {clearConsoleAndScrollbackBuffer} from "./index.js"
 import { mainMenu } from "./menus.js";
 import readlineSync from "readline-sync";
 import cfonts from 'cfonts';
-import * as align from "@topcli/text-align";
 import chalk from "chalk";
-import chalkAnimation from "chalk-animation";
-// import { clearConsoleAndScrollbackBuffer } from '.';
 const log = console.log;
 
 let loserImage = `
@@ -45,47 +42,68 @@ let loserImage = `
                                                           
                                                           
                                                           `
-
 let winnerImage = `
-                                                                                                  :^^:
-                                                                                                ?!.:^Y:
-                                                                                                .:5JJ5^
-                                                                              :7JJ?7^            J5YJ5?          :~7?J?!
-                                                                            :PY?7?JYY!^:       Y5JJJYP~       ^?JJ??7JPJ
-                                                                            ^G??55PYYYPJ      J5JJYYY55     :?YYYYYYY7Y5
-                                                                              YYY555YY5G5J:   JYJYYYY55P?   !YY5Y?!!!P?P! 
-                                                                              :5YPJ!!!!J5YY!^JP5YYYY5555G~:?YY57!!!!Y5PY^:
-                                                                              :Y55?!!!!755Y^7JY5PPPP55YY?7P5Y!!!!!Y5P5YJJ?:
-                                                                                ?55J!!!7JPPJ!^^^^^~~~^^^~?BY~!!!7Y55~.5YYPJ
-                                                                                  !55Y?J5J75GPP5YYJJJJY55GG?YY!!J55J:..!!!~^
-                                                                                  :?5GY777?PGPPPPPPPPPPGG?77JP55Y!
-                                                                              ~?.^: YY777777YPGGPPPPGBGY77777?G7. 
-                                                                              :JPJ.^P7777777??J5PGGGPJ???7777757.~:.: ------ HUZZAH!
-                                                                                ^7^ !577777?GBYYY7JJ?75J5BP7777JJ.7Y?!
-                                                                                    !577777?Y??J?!77!7JJ?JY?777JJ .JJ
-                                                                        ^7?J^     .YJ!!!!!~^::^7!:^7!::^^~!!!!75:   
-                                                                        7YJJ5Y:~777J?:::::::::..^^.:~:.:::::::::~5777~
-                                                                        ?PJ7~?PP5Y5P:::::::::^7??7777??!::::::::.YPY5PP!
-                                                                        :!. .G5YJ??P~::::::::^G#GY5PPB#J::::::::^5J?J5PP^:::
-                                                                            YPYJ??YP7::::::::^?55P55Y!::::::::~55?JPYJY55Y^
-                                                                              ?P5J??J5Y7~^:::::.::^^:..:::::^7J5Y??JPG??7~
-                                                                              ^J55J??JYPYJ7!~^^^^^^^^^~!7?YPYJ??J55J^
-                                                                                !PGP5JJGPYY5P5JJJJJJJY5P5YYBYYYYJ!:
-                                                                                ~P55PPY5BJ7???YYJ????JJJ???75G~^~: 
-                                                                              ?5JJY5PPGPY????J5PJ!!JPYJ????PG:.7Y?7
-                                                                              :YPPPPPPG5P5YYYYPP5555P5YYYY5PG^..JJ: 
-                                                                              :!?GGGGGPGPYJJJJJPJ???JYPYYYYJPB: :~7??!^
-                                                                            !5J77JYPGYP5PYYYY5PP5YYYPP55555PP7?5YJ???5?
-                                                                            :P!~~~~7?JGJJPJJJJJJPJJJJPJJJJJ5YJGY?!~~~~~P~
-                                                                            ^P~~~~~~7?J?JP?????JP???JPJJJJJ5YJJ?7~~~~~~57 
-                                                                          ^!GJ~~~~~!???JP?????JP???JPJJJJJ5Y???!~~~~~?G7^
-                                                                          ^??JPY?777J555PP?????JP???JPJJJJJ5P555J777?YGY??^
-                                                                          :~!?Y5555P5YYYPJ???JJP???YPYJJJJ55YY5P5555Y?!~:
-                                                                              ::^~~!!!77?JJYYYY5YYYY5YYYYYJ77!!!~~^::
-                                                                                            :::::::::::::
-                                                                                            
+                                                                                                                  :^^:
+                                                                                                                ?!.:^Y:
+                                                                                                                .:5JJ5^
+                                                                                              :7JJ?7^            J5YJ5?          :~7?J?!
+                                                                                            :PY?7?JYY!^:       Y5JJJYP~       ^?JJ??7JPJ
+                                                                                            ^G??55PYYYPJ      J5JJYYY55     :?YYYYYYY7Y5
+                                                                                              YYY555YY5G5J:   JYJYYYY55P?   !YY5Y?!!!P?P! 
+                                                                                              :5YPJ!!!!J5YY!^JP5YYYY5555G~:?YY57!!!!Y5PY^:
+                                                                                              :Y55?!!!!755Y^7JY5PPPP55YY?7P5Y!!!!!Y5P5YJJ?:
+                                                                                                ?55J!!!7JPPJ!^^^^^~~~^^^~?BY~!!!7Y55~.5YYPJ
+                                                                                                  !55Y?J5J75GPP5YYJJJJY55GG?YY!!J55J:..!!!~^
+                                                                                                  :?5GY777?PGPPPPPPPPPPGG?77JP55Y!
+                                                                                              ~?.^: YY777777YPGGPPPPGBGY77777?G7. 
+                                                                                              :JPJ.^P7777777??J5PGGGPJ???7777757.~:.: ------ HUZZAH!
+                                                                                                ^7^ !577777?GBYYY7JJ?75J5BP7777JJ.7Y?!
+                                                                                                    !577777?Y??J?!77!7JJ?JY?777JJ .JJ
+                                                                                        ^7?J^     .YJ!!!!!~^::^7!:^7!::^^~!!!!75:   
+                                                                                        7YJJ5Y:~777J?:::::::::..^^.:~:.:::::::::~5777~
+                                                                                        ?PJ7~?PP5Y5P:::::::::^7??7777??!::::::::.YPY5PP!
+                                                                                        :!. .G5YJ??P~::::::::^G#GY5PPB#J::::::::^5J?J5PP^:::
+                                                                                            YPYJ??YP7::::::::^?55P55Y!::::::::~55?JPYJY55Y^
+                                                                                              ?P5J??J5Y7~^:::::.::^^:..:::::^7J5Y??JPG??7~
+                                                                                              ^J55J??JYPYJ7!~^^^^^^^^^~!7?YPYJ??J55J^
+                                                                                                !PGP5JJGPYY5P5JJJJJJJY5P5YYBYYYYJ!:
+                                                                                                ~P55PPY5BJ7???YYJ????JJJ???75G~^~: 
+                                                                                              ?5JJY5PPGPY????J5PJ!!JPYJ????PG:.7Y?7
+                                                                                              :YPPPPPPG5P5YYYYPP5555P5YYYY5PG^..JJ: 
+                                                                                              :!?GGGGGPGPYJJJJJPJ???JYPYYYYJPB: :~7??!^
+                                                                                            !5J77JYPGYP5PYYYY5PP5YYYPP55555PP7?5YJ???5?
+                                                                                            :P!~~~~7?JGJJPJJJJJJPJJJJPJJJJJ5YJGY?!~~~~~P~
+                                                                                            ^P~~~~~~7?J?JP?????JP???JPJJJJJ5YJJ?7~~~~~~57 
+                                                                                          ^!GJ~~~~~!???JP?????JP???JPJJJJJ5Y???!~~~~~?G7^
+                                                                                          ^??JPY?777J555PP?????JP???JPJJJJJ5P555J777?YGY??^
+                                                                                          :~!?Y5555P5YYYPJ???JJP???YPYJJJJ55YY5P5555Y?!~:
+                                                                                              ::^~~!!!77?JJYYYY5YYYY5YYYYYJ77!!!~~^::
+                                                                                                            :::::::::::::
                                                                                             `
 
+
+let winnerMessage = `
+
+                                                                                                                                                    
+                                                                                                                                                    
+                                            YYYYYYY       YYYYYYY     OOOOOOOOO     UUUUUUUU     UUUUUUUU     WWWWWWWW                           WWWWWWWWIIIIIIIIIINNNNNNNN        NNNNNNNN !!! 
+                                            Y:::::Y       Y:::::Y   OO:::::::::OO   U::::::U     U::::::U     W::::::W                           W::::::WI::::::::IN:::::::N       N::::::N!!:!!
+                                            Y:::::Y       Y:::::Y OO:::::::::::::OO U::::::U     U::::::U     W::::::W                           W::::::WI::::::::IN::::::::N      N::::::N!:::!
+                                            Y::::::Y     Y::::::YO:::::::OOO:::::::OUU:::::U     U:::::UU     W::::::W                           W::::::WII::::::IIN:::::::::N     N::::::N!:::!
+                                            YYY:::::Y   Y:::::YYYO::::::O   O::::::O U:::::U     U:::::U       W:::::W           WWWWW           W:::::W   I::::I  N::::::::::N    N::::::N!:::!
+                                              Y:::::Y Y:::::Y   O::::::O     O:::::O U:::::D     D:::::U        W:::::W         W:::::W         W:::::W    I::::I  N:::::::::::N   N::::::N!:::!
+                                                Y:::::Y:::::Y   O::::::O     O:::::O U:::::D     D:::::U         W:::::W       W:::::::W       W:::::W     I::::I  N:::::::N::::N  N::::::N!:::!
+                                                Y:::::::::Y     O::::::O     O:::::O U:::::D     D:::::U          W:::::W     W:::::::::W     W:::::W      I::::I  N::::::N N::::N N::::::N!:::!
+                                                  Y:::::::Y     O::::::O     O:::::O U:::::D     D:::::U           W:::::W   W:::::W:::::W   W:::::W       I::::I  N::::::N  N::::N:::::::N!:::!
+                                                  Y:::::Y       O::::::O     O:::::O U:::::D     D:::::U            W:::::W W:::::W W:::::W W:::::W        I::::I  N::::::N   N:::::::::::N!:::!
+                                                  Y:::::Y       O::::::O     O:::::O U:::::D     D:::::U             W:::::W:::::W   W:::::W:::::W         I::::I  N::::::N    N::::::::::N!!:!!
+                                                  Y:::::Y       O:::::::O   O::::::O U::::::U   U::::::U              W:::::::::W     W:::::::::W          I::::I  N::::::N     N:::::::::N !!! 
+                                                  Y:::::Y       O::::::::OOO:::::::O U:::::::UUU:::::::U               W:::::::W       W:::::::W         II::::::IIN::::::N      N::::::::N     
+                                                YYYY:::::YYYY     OO:::::::::::::OO   UU:::::::::::::UU                 W:::::W         W:::::W          I::::::::IN::::::N       N:::::::N !!! 
+                                                Y:::::::::::Y       OO:::::::::OO       UU:::::::::UU                    W:::W           W:::W           I::::::::IN::::::N        N::::::N!!:!!
+                                                YYYYYYYYYYYYY         OOOOOOOOO           UUUUUUUUU                       WWW             WWW            IIIIIIIIIINNNNNNNN         NNNNNNN !!! 
+                                                                                                                                                                                                
+  `
 
 
 let menu = ["Let's Play!", "Tutorial", "User Menu", "Credits"];
@@ -205,41 +223,4 @@ doing my very best. You are my best friend, and I am so grateful for you, each a
   }, 1000);
 }
 
-// let credits = [
-//   `\nWith my most profound appreciation, I would like to acknowledge the following people who helped make this game a success:`,
-// chalk.magenta(`Danielle Barker`), `, who gave me more than my fair share of time and patience while I made dumb, obvious mistakes :D I appreciate you!!`]
-
-// Greg Richardson, who was instrumental in helping me make my game playable at all!! Really couldn't have done this without you!
-
-// Greg Fenton, for his sage advice in our Feedback Protocol Session :) 
-
-// Grimes, for giving me some awesome ideas on what to do next!
-
-// To ALL my fellow C9 cohort learners, who were ALL such a huge part of my game being as good as it got! 
-
-// A special shout-out to Vince, for all his help with the sound that I never even managed to get going... you are amazing!!
-
-// To the Inception U team, Cheryl, Carol, Margo, Greg H., Jen, Jan, Al, and literally ANYONE ELSE I forgot to include because
-// I'm sick and it's 8 PM the night before this is due.... you are all amazing and I'm so grateful to you all!
-
-// I'd like to acknowledge the resources that supported the creation of this project... all the npm package makers, the programmers who
-// came before me whose brilliance and openness made my silly little game possible.
-
-// This game was created in the traditional Treaty 7 territory, home of the Blackfoot confederacy (the Siksika, Kainai, Piikani, 
-// Îyâxe Nakoda and Tsuut'ina nations), in the place traditionally known as Moh'kinsstis. 
-// This territory is also home to the Métis Nation of Alberta, Region 3.
-
-// Finally- and certainly not least of all- I would like to thank my husband, Brandon. Your patience and support has allowed me
-// to spend day and night glued to my keyboard making a dumb game about riding a donkey, taking care of everything so I can
-// do my very best. You are my best friend, and I am so grateful for you, each and every single day.
-
-// FIN
-
-// `
-
-
-
-
-
-
-export { loserImage, winnerImage, menu, turningLeft, turningRight, leanedRight, leanedLeft, wrong, correct, credits}
+export { loserImage, winnerImage, winnerMessage, menu, turningLeft, turningRight, leanedRight, leanedLeft, wrong, correct, credits}

@@ -2,11 +2,9 @@ import fetch from "node-fetch";
 import readlineSync from "readline-sync";
 
 import { clearConsoleAndScrollbackBuffer, byeBye } from "./index.js";
-import { menuChoices, mainMenu } from "./menus.js";
+import { mainMenu } from "./menus.js";
 import cfonts from "cfonts";
-import * as align from "@topcli/text-align";
 import chalk from "chalk";
-import chalkAnimation from "chalk-animation";
 const log = console.log;
 
 let loggedIn = false;
@@ -55,17 +53,12 @@ async function logIn() {
     colors: ["#FFBB33"], // define all colors
   });
   log(chalk.blueBright("Please enter your saved name: "));
-//   console.log("Log into your existing account\n-------------------\n");
-  // console.log("Please enter your information here");
   let username = readlineSync.question("");
   log(chalk.blueBright("Please enter your password: "));
 
-  let password = readlineSync.question("", [
-    { hideEchoback: true },
-  ]);
+  let password = readlineSync.question("", [{ hideEchoback: true }]);
 
   let attemptUserInfo = { name: username, password: password };
-  // console.log(attemptUserInfo)
   let loginAttemptResponse = await fetch("http://localhost:3500/user/logIn", {
     method: "POST",
     headers: { "Content-Type": "application/json;charset=utf-8" },
@@ -78,15 +71,16 @@ async function logIn() {
     console.log(loginAttempt.error);
     console.log(`\nYour name is still: ${userInfo.name}\n`);
     setTimeout(() => {
-      let menuChoice = readlineSync
-        .keyIn(
-          'Press "U" to return to user menu, or "T" to try again',
-          { limit: ["u", "t"] },
-          { hideEchoback: true }
+      log(
+        chalk.blueBright(
+          `Press "M" to return to the Main Menu, or "T" to Try Again`
         )
+      );
+      let menuChoice = readlineSync
+        .keyIn("", { limit: ["m", "t"] }, { hideEchoback: true })
         .toLowerCase();
 
-      if (menuChoice === "u") {
+      if (menuChoice === "m") {
         mainMenu();
       }
       if (menuChoice === "t") {
@@ -94,14 +88,9 @@ async function logIn() {
       }
     }, 1000);
   } else {
-    // console.log(loginAttempt);
     updatingUserInfo(loginAttempt);
-    // console.log(userInfo);
     updatingLoggedIn();
     console.log("\nYou are now logged in as: " + chalk.yellow(userInfo.name));
-    // !userInfo.password
-    // ? ""
-    // : console.log(`Your password is: ${userInfo.password}`);
     !userInfo.highScore
       ? ""
       : console.log(`\nYour high score is: ${userInfo.highScore}`);
@@ -129,8 +118,6 @@ async function newUser() {
     align: "left", // define text alignment
     colors: ["#FFBB33"], // define all colors
   });
-//   console.log("New User Account Creation\n");
-  // console.log("Please enter your information here");
   log(chalk.blueBright("Please enter your new name: "));
   let username = readlineSync.question([""]);
   log(chalk.blueBright("Please enter your new password: "));
@@ -149,11 +136,13 @@ async function newUser() {
     body: JSON.stringify(userToShare),
   });
   userInfo = await newUserResponse.json();
-  // console.log(userInfo)
   loggedIn = true;
   console.log(
-    `\nYour name is: `+ chalk.yellow(userInfo.name) + ` and your password is: `+ chalk.yellow(userInfo.password));
-  // console.log('I got here')
+    `\nSuccess! Your name is: ` +
+      chalk.yellow(userInfo.name) +
+      ` and your password is: ` +
+      chalk.yellow(userInfo.password)
+  );
   setTimeout(() => {
     let choice = readlineSync.keyIn(
       '\nPress "M" to return to Menu',
@@ -179,10 +168,6 @@ function logOutResetToGuest() {
     align: "left", // define text alignment
     colors: ["#FFBB33"], // define all colors
   });
-//   console.log("You are now logged out!\n");
-  // console.log(
-  //   `Name: ${userInfo.name}\n`
-  // );
   setTimeout(() => {
     let selection = readlineSync
       .keyIn(
@@ -200,6 +185,14 @@ function updatingUserInfo(newinfo) {
   userInfo.currentScore = 0;
 }
 
+function updatingTotalScore(gameScore) {
+  userInfo.totalScore = +userInfo.totalScore + gameScore;
+}
+
+function updatingHighScore(gameScore) {
+  userInfo.highScore = gameScore;
+}
+
 function updatingLoggedIn() {
   if (loggedIn) {
     loggedIn = false;
@@ -210,6 +203,7 @@ function updatingLoggedIn() {
 }
 
 export {
+  updatingHighScore,
   updateGuestName,
   scoreIfLoggedIn,
   logIn,
@@ -217,6 +211,7 @@ export {
   logOutResetToGuest,
   updatingUserInfo,
   updatingLoggedIn,
+  updatingTotalScore,
   userInfo,
   loggedIn,
 };

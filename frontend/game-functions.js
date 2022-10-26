@@ -1,16 +1,16 @@
 import fetch from "node-fetch";
 import readlineSync from "readline-sync";
-import { clearConsoleAndScrollbackBuffer, terminal } from "./index.js";
-import { menuChoices, mainMenu, endgameMenu } from "./menus.js";
-import { userInfo, loggedIn } from "./user-functions.js";
+import { clearConsoleAndScrollbackBuffer } from "./index.js";
+import { mainMenu, endgameMenu } from "./menus.js";
+import { userInfo, loggedIn, updatingTotalScore, updatingHighScore, updatingUserInfo } from "./user-functions.js";
 import {
   loserImage,
   winnerImage,
+  winnerMessage,
   wrong,
   } from "./frontend-Objects.js";
 import { theWholeGame } from "./theGame.js";
 import cfonts from "cfonts";
-import * as align from "@topcli/text-align";
 import chalk from "chalk";
 import chalkAnimation from "chalk-animation";
 const log = console.log;
@@ -56,23 +56,12 @@ async function startingGame() {
   );
   course = await courseResponse.json();
   console.log("Please hold...");
-  // startBar();
-  // setTimeout(() => {
   playingGame(course);
-  // }, 4000);
 }
 
 function playingGame(course) {
-  // console.log("Let's gooooo!");
   clearConsoleAndScrollbackBuffer();
-  // slowBPM.play();
-  // startBar();
-  // setTimeout( () => {
-  // clearConsoleAndScrollbackBuffer();
-
   theWholeGame(course);
-  // }, 4000)
-  // theWholeGame(course);
 }
 
 async function endgame(result, gameScore, reason) {
@@ -89,10 +78,10 @@ async function endgame(result, gameScore, reason) {
         console.log(chalk.blueBright(`\n\nCongratulations! Your Score Is: `) + chalk.yellow(gameScore));
         if (loggedIn) {
           // if they're logged in
-          userInfo.totalScore = +userInfo.totalScore + gameScore;
+          updatingTotalScore(gameScore);
           if (+userInfo.highScore < gameScore) {
             newHigh = true;
-            userInfo.highScore = gameScore;
+            updatingHighScore(gameScore);
           }
           let resultResponse = await fetch(
             `http://localhost:3500/winnerwinner`,
@@ -102,9 +91,8 @@ async function endgame(result, gameScore, reason) {
               body: JSON.stringify(userInfo),
             }
           );
-          userInfo = await resultResponse.json();
-          //   userInfo.currentScore = 0; TODO: does this mess anything up?
-
+          let data = await resultResponse.json();
+          updatingUserInfo(data)
           console.log("Total score is: " + userInfo.totalScore);
           if (!newHigh) {
             console.log("High score is still: " + userInfo.highScore);
@@ -122,7 +110,6 @@ async function endgame(result, gameScore, reason) {
     }, 3000);
   }
   if (result === "Loser") {
-    // console.log("Score is: " + gameScore);
     if (reason === "wrong") {
       log(chalk.red(wrong));
     }
@@ -132,7 +119,6 @@ async function endgame(result, gameScore, reason) {
             align: 'center',              // define text alignment
             colors: ["#0000FF"],         // define all colors
           });
-    //   log(chalk.blue(tooLate));
     }
     setTimeout(() => {
       clearConsoleAndScrollbackBuffer();
@@ -142,7 +128,6 @@ async function endgame(result, gameScore, reason) {
         align: 'center',              // define text alignment
         colors: ["#FFBB33"],         // define all colors
       });
-    //   log(chalk.yellow(gotBuckedMessage));
       log(loserImage);
       console.log(`\n---------------------------------------------------------------------------------------------------------------------------------------------------------------`)
 

@@ -8,7 +8,6 @@ import * as align from "@topcli/text-align";
 import chalk from "chalk";
 import chalkAnimation from "chalk-animation";
 const log = console.log;
-// import { course } from "./index.js";
 let timeoutId;
 let userInput;
 let value;
@@ -44,14 +43,9 @@ function theWholeGame(course) {
   resetTimer(course);
   process.on("exit", function (code) {
     clearTimeout(timeoutId);
-    // console.log("Timeout ID (cleared) is: " + timeoutId);
-    //   if (code !== 0) {
-    //     return "Loser";
-    //   } else return "Winner";
   });
 }
 
-// theWholeGame(course);
 const TURN_LEFT = -1;
 const TURN_RIGHT = 1;
 
@@ -92,14 +86,10 @@ process.stdin.on("keypress", function (ch, key) {
 function giveResponse(thekey) {
   switch (thekey) {
     case "a":
-      // console.log(leanedLeft);
       userInput = TURN_LEFT;
-      // clearConsoleAndScrollbackBuffer()
       break;
     case "d":
-      // console.log(leanedRight);
       userInput = TURN_RIGHT;
-      // clearConsoleAndScrollbackBuffer()
       break;
     default:
       return;
@@ -107,30 +97,13 @@ function giveResponse(thekey) {
   if (course[0] + userInput != 0) {
     clearTimeout(timeoutId);
     clearConsoleAndScrollbackBuffer();
-    // log(chalk.red(`                                                                    WRONG!`))
-    // setTimeout( () => {
-      // console.log("Ya got BUCKED, son!");
       userStatus = "Loser";
-      // clearTimeout(timeoutId);
-      // console.log('GameScore is: ' + gameScore)
       endgame(userStatus, gameScore, "wrong");
       return;
-
-
-    // }, 1000)
-    
-    
-    // console.log("Ya got BUCKED, son!");
-    // userStatus = "Loser";
-    // clearTimeout(timeoutId);
-    // // console.log('GameScore is: ' + gameScore)
-    // endgame(userStatus, gameScore);
-    // return;
   }
   if (course.length === 1) {
     /// if we're at the last segment in the array
     clearTimeout(timeoutId);
-    // console.log(`\n\nYOU WIN!\n\n`);
     console.log(gameScore);
     userStatus = "Winner";
     endgame(userStatus, gameScore);

@@ -7,7 +7,6 @@ const userSchema = new Schema(
     password: { type: String, required: true },
     highScore: {type: Number, required: true },
     totalScore: {type: Number, required: true },
-    // currentScore: {type: Number, required: true}
   },
   {
     statics: {
@@ -28,14 +27,6 @@ const userSchema = new Schema(
       newUser(data) {
         return User.create(data);
       },
-    //   async findById(id) {
-    //     let user= await this.findById({_id: id});
-    //     if (!user) {
-    //       throw new Error("Invalid user")
-    //     } else {
-    //       return user;
-    //     }
-    // }
   }
 }
 );
@@ -46,22 +37,5 @@ async function newUser(data) {
   return await User.create(data);
 }
 
-// async function getUserInfo(data) {}
 
 export { User, newUser };
-
-// await User.create({ name: "Shrek"})
-
-// const test = new User({ name: "Test", password: "test", topScore: 4, totalScore: 4});
-// const otherTest = new User({ name: "Shrek", password: "DONKEY!!!", topScore: 2, totalScore: 2});
-
-// await otherTest.save()
-// console.log (otherTest.name)
-
-// const users = await User.find();
-// console.log(users);
-
-// const allShrek = await User.find({ name: /^S/ });
-// console.log(allShrek);
-
-

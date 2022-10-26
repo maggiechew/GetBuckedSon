@@ -1,11 +1,6 @@
-import fetch from "node-fetch";
 import readlineSync from "readline-sync";
 import { startingGame, chooseDifficulty } from "./game-functions.js";
-import {
-  clearConsoleAndScrollbackBuffer,
-  byeBye,
-  openingScreen,
-} from "./index.js";
+import { clearConsoleAndScrollbackBuffer, byeBye } from "./index.js";
 import {
   menu,
   turningLeft,
@@ -15,20 +10,16 @@ import {
 import {
   updateGuestName,
   newUser,
-  updatingUserInfo,
   logIn,
   scoreIfLoggedIn,
   userInfo,
   loggedIn,
-  updatingLoggedIn,
   logOutResetToGuest,
 } from "./user-functions.js";
 
 import cfonts from "cfonts";
 import * as align from "@topcli/text-align";
 import chalk from "chalk";
-import chalkAnimation from "chalk-animation";
-import CliFrames from "cli-frames";
 const log = console.log;
 
 let terminal = {
@@ -47,24 +38,20 @@ console.retro = async (string) => {
 
 function mainMenu() {
   clearConsoleAndScrollbackBuffer();
-  // log(chalk.blue.bgYellowBright(align.center(`Welcome, ${userInfo.name}\n`, terminal.columns)));
   cfonts.say(`Welcome, ${userInfo.name}`, {
     font: "tiny", // define the font face
     align: "left", // define text alignment
     colors: ["#FFBB33"], // define all colors
   });
   scoreIfLoggedIn();
-  // console.log("\n")
   menuChoices();
 }
 
 function menuChoices() {
   log(chalk.blueBright(`Please make a selection.\nPress '0' to Exit.`));
-  // log("\n");
   let theMenu = readlineSync.keyInSelect(menu);
   switch (theMenu) {
     case 0:
-      console.log("YEEEEEHAWWWW! GIDDY UP, PARDNER!");
       chooseDifficulty();
       break;
     case 1:
@@ -101,14 +88,6 @@ function userMenu() {
   );
   if (!loggedIn) {
     menu = ["Update your guest name", "Log In", "Create New Account"];
-    // cfonts.say(`USER MENU`, {
-    //   font: "tiny", // define the font face
-    //   align: "left", // define text alignment
-    //   colors: ["#FFBB33"], // define all colors
-    // });
-    // log(
-    //   chalk.blueBright('Please make your selection.\nPress 0 to return to the previous menu.')
-    //   );
     let theMenu = readlineSync.keyInSelect(menu);
     switch (theMenu) {
       case 0:
@@ -134,15 +113,6 @@ function userMenu() {
   }
   if (loggedIn) {
     menu = ["Log Out"];
-    // cfonts.say(`USER MENU`, {
-    //   font: "tiny", // define the font face
-    //   align: "left", // define text alignment
-    //   colors: ["#FFBB33"], // define all colors
-    // });
-    // log(
-    //   chalk.blueBright('Please make your selection.\nPress 0 to return to the previous menu.')
-    //   );
-
     let theMenu = readlineSync.keyInSelect(menu);
     switch (theMenu) {
       case 0:
@@ -154,6 +124,7 @@ function userMenu() {
           clearConsoleAndScrollbackBuffer();
           mainMenu();
         }, 1000);
+        break;
     }
   }
 }
@@ -168,9 +139,9 @@ async function showTutorial() {
   });
 
   await console.retro(
-    "Welcome to my game! Your mission- should you choose to accept it- is to\n"
+    "Welcome to my game! Your mission- should you choose to accept it- is to " +
+      chalk.red("STAY ON YOUR DONKEY!\n\n")
   );
-  await console.retro(chalk.red("STAY ON YOUR DONKEY!\n\n"));
   await console.retro("When your donkey leans left...\n");
   log(chalk.yellow(turningLeft));
 
@@ -201,8 +172,6 @@ Users can also keep track of their highest score EVER!
 
 To create your own user account- or access one you've already created- choose "User Menu" in the Main Menu.\n\n`
       );
-
-      // console.log(tutorial);
 
       setTimeout(() => {
         readlineSync
@@ -241,7 +210,5 @@ function endgameMenu() {
       break;
   }
 }
-
-
 
 export { mainMenu, menuChoices, userMenu, endgameMenu, showTutorial };
