@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "init-server": "node ./backend/src/express-server.js",
-    "init-game": "node ./frontend/index.js",
+    "init-game": " cd frontend && node index.js",
     "start": "npm run init-server && npm run init-game"
   },
   "type": "module",
